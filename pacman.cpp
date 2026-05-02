@@ -19,12 +19,11 @@
 
 #include <GL/glut.h>
 #include <cmath>
-#include <cstdlib>
-#include <ctime>
 #include <cstring>
 #include <string>
 #include <climits>
 #include <algorithm>
+#include <random>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -549,7 +548,6 @@ static void resetGhosts()
 
 static void initGame()
 {
-    srand((unsigned)time(NULL));
     resetMaze();
     pac.lives  = 3;
     pac.score  = 0;
@@ -578,7 +576,8 @@ static int chooseDir(int col, int row, int curDir,
 {
     int best = D_NONE;
     int bestDist = INT_MAX;
-    int opp = (curDir + 2) % 4; /* opposite – cannot reverse */
+    /* Adding 2 (mod 4) inverts direction in the RIGHT/DOWN/LEFT/UP encoding */
+    int opp = (curDir + 2) % 4;
 
     for (int d = 0; d < 4; ++d) {
         if (d == opp) continue;
@@ -594,9 +593,12 @@ static int chooseDir(int col, int row, int curDir,
     return best == D_NONE ? curDir : best;
 }
 
-/* Random valid direction (for frightened mode) */
+/* Random valid direction (for frightened mode).
+ * Uses a Mersenne-Twister engine instead of rand() for better quality. */
 static int randomDir(int col, int row, int curDir, GhostMode mode)
 {
+    static std::mt19937 rng(std::random_device{}());
+    /* Adding 2 (mod 4) inverts direction in the RIGHT/DOWN/LEFT/UP encoding */
     int opp = (curDir + 2) % 4;
     int choices[4]; int n = 0;
     for (int d = 0; d < 4; ++d) {
@@ -607,8 +609,9 @@ static int randomDir(int col, int row, int curDir, GhostMode mode)
         if (nc >= COLS) nc = 0;
         if (ghostCanEnter(nc, nr, mode)) choices[n++] = d;
     }
-    if (n == 0) return (curDir + 2) % 4; /* reverse if stuck */
-    return choices[rand() % n];
+    if (n == 0) return (curDir + 2) % 4; /* reverse if completely stuck */
+    std::uniform_int_distribution<int> dist(0, n - 1);
+    return choices[dist(rng)];
 }
 
 /* =====================================================================
@@ -725,7 +728,8 @@ static void updateGhost(Ghost &g)
         g.x += DPX[g.dir] * (g.speed * 0.5f);
         float hcx, hcy;
         cellCentre(col, row, hcx, hcy);
-        if (fabsf(g.x - hcx) > CELL * 0.4f) g.dir ^= 2; /* flip L/R */
+        /* XOR with 2 flips between RIGHT(0)↔LEFT(2); DOWN(1)↔UP(3) stays intact */
+        if (fabsf(g.x - hcx) > CELL * 0.4f) g.dir ^= 2;
 
         --g.houseTimer;
         if (g.houseTimer <= 0) {
@@ -805,28 +809,25 @@ static void updateGhost(Ghost &g)
         cellCentre(col, row, cx, cy);
         g.x = cx; g.y = cy;
 
-        int targetCol, targetRow;
-
-        if (g.mode == GM_SCATTER) {
-            targetCol = g.scCol;
-            targetRow = g.scRow;
-        } else if (g.mode == GM_CHASE) {
-            int pc, pr;
-            pixelCell(pac.x, pac.y, pc, pr);
-            targetCol = pc;
-            targetRow = pr;
-        } else if (g.mode == GM_FRIGHT) {
+        if (g.mode == GM_FRIGHT) {
             g.dir = randomDir(col, row, g.dir, g.mode);
-            goto move_ghost;
-        } else { /* GM_EATEN */
-            targetCol = 13;
-            targetRow = 11;
+        } else {
+            int targetCol, targetRow;
+            if (g.mode == GM_SCATTER) {
+                targetCol = g.scCol;
+                targetRow = g.scRow;
+            } else if (g.mode == GM_CHASE) {
+                int pc, pr;
+                pixelCell(pac.x, pac.y, pc, pr);
+                targetCol = pc;
+                targetRow = pr;
+            } else { /* GM_EATEN */
+                targetCol = 13;
+                targetRow = 11;
+            }
+            g.dir = chooseDir(col, row, g.dir, targetCol, targetRow, g.mode);
         }
-
-        g.dir = chooseDir(col, row, g.dir, targetCol, targetRow, g.mode);
     }
-
-move_ghost:
     /* Move ghost */
     float nx = g.x + DPX[g.dir] * g.speed;
     float ny = g.y + DPY[g.dir] * g.speed;
