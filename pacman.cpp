@@ -46,6 +46,10 @@ static const int V_POWER = 2;
 static const int V_EMPTY = 3;
 static const int V_DOOR  = 4;
 
+/* Timing constants (frames at ~60 fps) */
+static const int POWER_DURATION      = 360; /* power-pellet effect lasts ~6 s  */
+static const int FRIGHT_FLASH_FRAMES = 60;  /* start flashing when timer < this */
+
 /* Directions: RIGHT=0, DOWN=1, LEFT=2, UP=3, NONE=-1 */
 static const int D_RIGHT = 0;
 static const int D_DOWN  = 1;
@@ -253,7 +257,7 @@ static void drawGhost(const Ghost &g)
 
     float dr, dg, db;
     if (g.mode == GM_FRIGHT) {
-        if (powerTimer > 60 && (frame / 10) % 2 == 0) {
+        if (powerTimer > FRIGHT_FLASH_FRAMES && (frame / 10) % 2 == 0) {
             dr = 1.f; dg = 1.f; db = 1.f;   /* flashing white */
         } else {
             dr = 0.2f; dg = 0.2f; db = 0.9f; /* blue */
@@ -701,13 +705,13 @@ static void updatePacman()
         pac.score += 50;
         ++dotsEaten;
         powerActive = true;
-        powerTimer  = 360;  /* ~6 seconds at 60fps */
+        powerTimer  = POWER_DURATION;
         eatCombo    = 0;
         /* Put all non-house ghosts into frightened mode */
         for (int i = 0; i < 4; ++i) {
             if (ghosts[i].mode != GM_HOUSE && ghosts[i].mode != GM_EXIT) {
                 ghosts[i].mode      = GM_FRIGHT;
-                ghosts[i].modeTimer = 360;
+                ghosts[i].modeTimer = POWER_DURATION;
             }
         }
     }
@@ -730,7 +734,7 @@ static void updateGhost(Ghost &g)
         cellCentre(col, row, hcx, hcy);
         /* XOR with 2 flips between RIGHT(0)↔LEFT(2); DOWN(1)↔UP(3) stays intact.
          * 0.4f = 40% of cell width; exceeding this triggers the direction flip. */
-        if (fabsf(g.x - hcx) > CELL * 0.4f) g.dir ^= 2;
+        if (fabsf(g.x - hcx) > CELL * 0.4f) g.dir ^= 2;  /* flip LEFT↔RIGHT */
 
         --g.houseTimer;
         if (g.houseTimer <= 0) {
@@ -870,10 +874,10 @@ static bool checkGhostCollision()
         float d2 = dx * dx + dy * dy;
         if (d2 < hitRadius * hitRadius) {
             if (g.mode == GM_FRIGHT) {
-                /* Eat ghost */
+                /* Eat ghost – score doubles each consecutive eat: 200, 400, 800, 1600 */
                 g.mode = GM_EATEN;
                 ++eatCombo;
-                int pts = 200 * (1 << (eatCombo - 1)); /* 200,400,800,1600 */
+                int pts = 200 * (1 << (eatCombo - 1));
                 pac.score += pts;
             } else {
                 return true; /* Pacman dies */
