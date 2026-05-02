@@ -728,7 +728,8 @@ static void updateGhost(Ghost &g)
         g.x += DPX[g.dir] * (g.speed * 0.5f);
         float hcx, hcy;
         cellCentre(col, row, hcx, hcy);
-        /* XOR with 2 flips between RIGHT(0)↔LEFT(2); DOWN(1)↔UP(3) stays intact */
+        /* XOR with 2 flips between RIGHT(0)↔LEFT(2); DOWN(1)↔UP(3) stays intact.
+         * 0.4f = 40% of cell width; exceeding this triggers the direction flip. */
         if (fabsf(g.x - hcx) > CELL * 0.4f) g.dir ^= 2;
 
         --g.houseTimer;
@@ -973,9 +974,7 @@ static void display()
     /* Pacman */
     if (gState != ST_OVER && gState != ST_WIN) {
         glColor3f(1.f, 1.f, 0.f);
-        float angle = (gState == ST_DYING)
-                      ? pac.mouth               /* dying: open wide   */
-                      : pac.mouth;              /* playing: animate   */
+        float angle = pac.mouth;
         drawPacmanBody(pac.x, pac.y, CELL * 0.45f, angle,
                        (pac.dir == D_NONE) ? D_LEFT : pac.dir);
     }
