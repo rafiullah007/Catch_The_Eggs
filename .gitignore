@@ -1,0 +1,9 @@
+# Build output
+pacman
+
+# macOS artifacts
+.DS_Store
+
+# Editor artifacts
+*.o
+*.out
