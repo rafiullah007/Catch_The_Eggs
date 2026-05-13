@@ -1,2 +1,2 @@
 # Catch The Eggs
-Pacman_Game for our CSE 426 Computer Graphics lab final.
+Catch_The_Eggs_Game for our CSE 426 Computer Graphics lab final.
