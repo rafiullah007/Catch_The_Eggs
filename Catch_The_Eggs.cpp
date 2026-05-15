@@ -27,4 +27,12 @@ bool gameOver = false;
 int score = 0;
 float remainingTime = 120.0f;
 
+// =====================================================
+// BASKET
+// =====================================================
 
+float basketX = 450;
+float basketY = 40;
+float basketWidth = 120;
+float basketHeight = 25;
+float basketSpeed = 18;
