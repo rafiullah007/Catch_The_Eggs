@@ -6,3 +6,13 @@
 #include <cstdlib>
 #include <sstream>
 #include <cmath>
+using namespace std;
+
+// =====================================================
+// WINDOW
+// =====================================================
+
+const int WIDTH = 1000;
+const int HEIGHT = 700;
+
+
