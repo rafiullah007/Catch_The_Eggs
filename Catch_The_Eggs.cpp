@@ -16,3 +16,15 @@ const int WIDTH = 1000;
 const int HEIGHT = 700;
 
 
+// =====================================================
+// GAME STATE
+// =====================================================
+
+bool gameStarted = false;
+bool gamePaused = false;
+bool gameOver = false;
+
+int score = 0;
+float remainingTime = 120.0f;
+
+
