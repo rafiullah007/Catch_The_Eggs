@@ -598,3 +598,17 @@ void mouseMotion(int x, int y)
     if (basketX + basketWidth > WIDTH)
         basketX = WIDTH - basketWidth;
 }
+
+// =====================================================
+// INIT
+// =====================================================
+
+void init()
+{
+    glClearColor(1, 1, 1, 1);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    gluOrtho2D(0, WIDTH, 0, HEIGHT);
+}
