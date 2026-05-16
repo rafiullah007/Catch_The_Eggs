@@ -500,3 +500,38 @@ void display()
 
     glutSwapBuffers();
 }
+
+
+// =====================================================
+// RESET GAME
+// =====================================================
+
+void resetGame()
+{
+    score = 0;
+    remainingTime = 120;
+
+    basketWidth = 120;
+
+    objects.clear();
+    chickens.clear();
+
+    Chicken c1;
+
+    c1.x = 150;
+    c1.y = 620;
+    c1.speed = 3;
+    c1.dir = 1;
+
+    Chicken c2;
+
+    c2.x = 700;
+    c2.y = 500;
+    c2.speed = 2;
+    c2.dir = -1;
+
+    chickens.push_back(c1);
+    chickens.push_back(c2);
+
+    gameOver = false;
+}
