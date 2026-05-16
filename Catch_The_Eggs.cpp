@@ -612,3 +612,32 @@ void init()
 
     gluOrtho2D(0, WIDTH, 0, HEIGHT);
 }
+
+
+// =====================================================
+// MAIN
+// =====================================================
+
+int main(int argc, char** argv)
+{
+    srand(time(0));
+
+    glutInit(&argc, argv);
+
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(WIDTH, HEIGHT);
+
+    glutCreateWindow("Catch The Eggs");
+
+    init();
+
+    glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
+    glutPassiveMotionFunc(mouseMotion);
+
+    glutTimerFunc(16, update, 0);
+
+    glutMainLoop();
+
+    return 0;
+}
