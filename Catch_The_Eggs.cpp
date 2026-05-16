@@ -48,3 +48,5 @@ struct Chicken
     float speed;
     int dir;
 };
+
+vector<Chicken> chickens; // chicken nummbers 
