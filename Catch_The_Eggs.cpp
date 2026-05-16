@@ -65,3 +65,11 @@ enum ObjectType
     POWER_SLOW,
     POWER_TIME
 };
+
+struct FallingObject
+{
+    float x;
+    float y;
+    float speed;
+    ObjectType type;
+};
