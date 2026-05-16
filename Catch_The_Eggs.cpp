@@ -126,3 +126,21 @@ void drawCircle(float cx, float cy, float r)
 
     glEnd();
 }
+
+// =====================================================
+// DRAW BASKET
+// =====================================================
+
+void drawBasket()
+{
+    glColor3f(0.6f, 0.3f, 0.1f);
+
+    glBegin(GL_QUADS);
+
+    glVertex2f(basketX, basketY);
+    glVertex2f(basketX + basketWidth, basketY);
+    glVertex2f(basketX + basketWidth - 20, basketY + basketHeight);
+    glVertex2f(basketX + 20, basketY + basketHeight);
+
+    glEnd();
+}
