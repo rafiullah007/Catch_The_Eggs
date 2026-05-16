@@ -402,3 +402,101 @@ void update(int value)
     glutPostRedisplay();
     glutTimerFunc(16, update, 0);
 }
+
+// =====================================================
+// DISPLAY
+// =====================================================
+
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // background
+    glColor3f(0.6f, 0.9f, 1.0f);
+
+    glBegin(GL_QUADS);
+
+    glVertex2f(0, 0);
+    glVertex2f(WIDTH, 0);
+    glVertex2f(WIDTH, HEIGHT);
+    glVertex2f(0, HEIGHT);
+
+    glEnd();
+
+    // menu
+    if (!gameStarted)
+    {
+        glColor3f(0, 0, 0);
+
+        drawText(400, 500, "CATCH THE EGGS");
+        drawText(360, 420, "Press ENTER to Start");
+        drawText(360, 380, "Press ESC to Exit");
+
+        glutSwapBuffers();
+        return;
+    }
+
+    // paused
+    if (gamePaused)
+    {
+        glColor3f(0, 0, 0);
+
+        drawText(430, 350, "GAME PAUSED");
+        drawText(350, 300, "Press P to Resume");
+
+        glutSwapBuffers();
+        return;
+    }
+
+    // game over
+    if (gameOver)
+    {
+        glColor3f(1, 0, 0);
+
+        drawText(430, 400, "GAME OVER");
+
+        stringstream ss;
+        ss << "Final Score: " << score;
+
+        drawText(420, 350, ss.str());
+        drawText(320, 280, "Press R to Restart");
+
+        glutSwapBuffers();
+        return;
+    }
+
+    // chickens
+    for (auto& c : chickens)
+    {
+        drawChicken(c.x, c.y);
+    }
+
+    // falling objects
+    for (auto& obj : objects)
+    {
+        drawObject(obj);
+    }
+
+    // basket
+    drawBasket();
+
+    // score
+    glColor3f(0, 0, 0);
+
+    stringstream scoreText;
+    scoreText << "Score: " << score;
+
+    drawText(20, 650, scoreText.str());
+
+    // time
+    stringstream timeText;
+    timeText << "Time: " << (int)remainingTime;
+
+    drawText(20, 620, timeText.str());
+
+    // controls
+    drawText(20, 590, "A/D or Mouse = Move Basket");
+    drawText(20, 560, "P = Pause");
+
+    glutSwapBuffers();
+}
