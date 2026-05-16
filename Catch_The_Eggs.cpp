@@ -185,3 +185,43 @@ void drawChicken(float x, float y)
 
     glEnd();
 }
+
+// =====================================================
+// DRAW OBJECT
+// =====================================================
+
+void drawObject(FallingObject& obj)
+{
+    switch (obj.type)
+    {
+    case NORMAL_EGG:
+        glColor3f(1, 1, 1);
+        break;
+
+    case BLUE_EGG:
+        glColor3f(0, 0, 1);
+        break;
+
+    case GOLDEN_EGG:
+        glColor3f(1, 0.84f, 0);
+        break;
+
+    case POOP:
+        glColor3f(0.4f, 0.2f, 0);
+        break;
+
+    case POWER_BIG:
+        glColor3f(0, 1, 0);
+        break;
+
+    case POWER_SLOW:
+        glColor3f(1, 0, 1);
+        break;
+
+    case POWER_TIME:
+        glColor3f(0, 1, 1);
+        break;
+    }
+
+    drawCircle(obj.x, obj.y, 15);
+}
