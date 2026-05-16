@@ -242,3 +242,53 @@ bool collision(FallingObject& obj)
 
     return false;
 }
+
+// =====================================================
+// SPAWN OBJECT
+// =====================================================
+
+void spawnObject(float x, float y)
+{
+    FallingObject obj;
+
+    obj.x = x;
+    obj.y = y;
+
+    int r = rand() % 100;
+
+    if (r < 50)
+    {
+        obj.type = NORMAL_EGG;
+        obj.speed = globalFallSpeed;
+    }
+    else if (r < 70)
+    {
+        obj.type = BLUE_EGG;
+        obj.speed = globalFallSpeed + 1;
+    }
+    else if (r < 80)
+    {
+        obj.type = GOLDEN_EGG;
+        obj.speed = globalFallSpeed + 2;
+    }
+    else if (r < 90)
+    {
+        obj.type = POOP;
+        obj.speed = globalFallSpeed + 1;
+    }
+    else
+    {
+        int p = rand() % 3;
+
+        if (p == 0)
+            obj.type = POWER_BIG;
+        else if (p == 1)
+            obj.type = POWER_SLOW;
+        else
+            obj.type = POWER_TIME;
+
+        obj.speed = globalFallSpeed;
+    }
+
+    objects.push_back(obj);
+}
