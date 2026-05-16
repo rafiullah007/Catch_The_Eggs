@@ -50,3 +50,18 @@ struct Chicken
 };
 
 vector<Chicken> chickens; // chicken nummbers 
+
+// =====================================================
+// OBJECT TYPES
+// =====================================================
+
+enum ObjectType
+{
+    NORMAL_EGG,
+    BLUE_EGG,
+    GOLDEN_EGG,
+    POOP,
+    POWER_BIG,
+    POWER_SLOW,
+    POWER_TIME
+};
