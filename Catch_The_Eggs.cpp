@@ -582,3 +582,19 @@ void keyboard(unsigned char key, int x, int y)
     if (basketX + basketWidth > WIDTH)
         basketX = WIDTH - basketWidth;
 }
+
+
+// =====================================================
+// MOUSE
+// =====================================================
+
+void mouseMotion(int x, int y)
+{
+    basketX = x - basketWidth / 2;
+
+    if (basketX < 0)
+        basketX = 0;
+
+    if (basketX + basketWidth > WIDTH)
+        basketX = WIDTH - basketWidth;
+}
