@@ -73,3 +73,14 @@ struct FallingObject
     float speed;
     ObjectType type;
 };
+
+vector<FallingObject> objects;
+
+float globalFallSpeed = 4.0f;
+
+// =====================================================
+// POWERUP TIMERS
+// =====================================================
+
+int bigBasketTimer = 0;
+int slowMotionTimer = 0;
