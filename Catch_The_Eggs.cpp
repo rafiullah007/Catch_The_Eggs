@@ -84,3 +84,14 @@ float globalFallSpeed = 4.0f;
 
 int bigBasketTimer = 0;
 int slowMotionTimer = 0;
+
+// =====================================================
+// FUNCTION PROTOTYPES
+// =====================================================
+
+void spawnObject(float x, float y);
+void resetGame();
+
+// =====================================================
+// TEXT DRAWING
+// =====================================================
