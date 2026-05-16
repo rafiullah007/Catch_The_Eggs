@@ -292,3 +292,113 @@ void spawnObject(float x, float y)
 
     objects.push_back(obj);
 }
+
+// =====================================================
+// UPDATE
+// =====================================================
+
+void update(int value)
+{
+    if (gameStarted && !gamePaused && !gameOver)
+    {
+        remainingTime -= 0.016f;
+
+        if (remainingTime <= 0)
+        {
+            gameOver = true;
+        }
+
+        // chicken movement
+        for (auto& c : chickens)
+        {
+            c.x += c.speed * c.dir;
+
+            if (c.x > WIDTH - 80)
+                c.dir = -1;
+
+            if (c.x < 80)
+                c.dir = 1;
+
+            // random object spawn
+            if (rand() % 100 < 2)
+            {
+                spawnObject(c.x, c.y - 50);
+            }
+        }
+
+        // move objects
+        for (int i = 0; i < objects.size(); i++)
+        {
+            objects[i].y -= objects[i].speed;
+
+            if (collision(objects[i]))
+            {
+                switch (objects[i].type)
+                {
+                case NORMAL_EGG:
+                    score += 1;
+                    break;
+
+                case BLUE_EGG:
+                    score += 5;
+                    break;
+
+                case GOLDEN_EGG:
+                    score += 10;
+                    break;
+
+                case POOP:
+                    score -= 10;
+                    break;
+
+                case POWER_BIG:
+                    basketWidth = 200;
+                    bigBasketTimer = 600;
+                    break;
+
+                case POWER_SLOW:
+                    globalFallSpeed = 2;
+                    slowMotionTimer = 600;
+                    break;
+
+                case POWER_TIME:
+                    remainingTime += 15;
+                    break;
+                }
+
+                objects.erase(objects.begin() + i);
+                i--;
+            }
+            else if (objects[i].y < 0)
+            {
+                objects.erase(objects.begin() + i);
+                i--;
+            }
+        }
+
+        // big basket timer
+        if (bigBasketTimer > 0)
+        {
+            bigBasketTimer--;
+
+            if (bigBasketTimer == 0)
+            {
+                basketWidth = 120;
+            }
+        }
+
+        // slow motion timer
+        if (slowMotionTimer > 0)
+        {
+            slowMotionTimer--;
+
+            if (slowMotionTimer == 0)
+            {
+                globalFallSpeed = 4;
+            }
+        }
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(16, update, 0);
+}
