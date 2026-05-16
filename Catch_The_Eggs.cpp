@@ -535,3 +535,50 @@ void resetGame()
 
     gameOver = false;
 }
+// =====================================================
+// KEYBOARD
+// =====================================================
+
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 13:
+        gameStarted = true;
+        resetGame();
+        break;
+
+    case 'a':
+    case 'A':
+        basketX -= basketSpeed;
+        break;
+
+    case 'd':
+    case 'D':
+        basketX += basketSpeed;
+        break;
+
+    case 'p':
+    case 'P':
+        gamePaused = !gamePaused;
+        break;
+
+    case 'r':
+    case 'R':
+        if (gameOver)
+        {
+            resetGame();
+        }
+        break;
+
+    case 27:
+        exit(0);
+        break;
+    }
+
+    if (basketX < 0)
+        basketX = 0;
+
+    if (basketX + basketWidth > WIDTH)
+        basketX = WIDTH - basketWidth;
+}
