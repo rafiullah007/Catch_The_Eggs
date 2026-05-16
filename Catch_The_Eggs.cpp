@@ -36,3 +36,15 @@ float basketY = 40;
 float basketWidth = 120;
 float basketHeight = 25;
 float basketSpeed = 18;
+
+// =====================================================
+// CHICKEN
+// =====================================================
+
+struct Chicken
+{
+    float x;
+    float y;
+    float speed;
+    int dir;
+};
