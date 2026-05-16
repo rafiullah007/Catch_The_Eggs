@@ -9,10 +9,10 @@
 using namespace std;
 
 // =====================================================
-// WINDOW
+// WINDOW MABCDE
 // =====================================================
 
-const int WIDTH = 1000;
+const int WIDTH = 1000;  // Window width
 const int HEIGHT = 700;
 
 
