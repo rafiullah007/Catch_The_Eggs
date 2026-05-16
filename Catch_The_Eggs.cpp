@@ -225,3 +225,20 @@ void drawObject(FallingObject& obj)
 
     drawCircle(obj.x, obj.y, 15);
 }
+
+// =====================================================
+// COLLISION
+// =====================================================
+
+bool collision(FallingObject& obj)
+{
+    if (obj.x > basketX &&
+        obj.x < basketX + basketWidth &&
+        obj.y > basketY &&
+        obj.y < basketY + basketHeight)
+    {
+        return true;
+    }
+
+    return false;
+}
