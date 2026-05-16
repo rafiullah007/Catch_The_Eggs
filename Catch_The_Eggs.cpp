@@ -6,15 +6,15 @@
 #include <cstdlib>
 #include <sstream>
 #include <cmath>
+
 using namespace std;
 
 // =====================================================
-// WINDOW MABCDE
+// WINDOW
 // =====================================================
 
-const int WIDTH = 1000;  // Window width
+const int WIDTH = 1000;
 const int HEIGHT = 700;
-
 
 // =====================================================
 // GAME STATE
@@ -49,7 +49,7 @@ struct Chicken
     int dir;
 };
 
-vector<Chicken> chickens; // chicken nummbers 
+vector<Chicken> chickens;
 
 // =====================================================
 // OBJECT TYPES
@@ -83,7 +83,7 @@ float globalFallSpeed = 4.0f;
 // =====================================================
 
 int bigBasketTimer = 0;
-int slowMotionTimer = 0;
+int slowMotionTimer = 0; ///done
 
 // =====================================================
 // FUNCTION PROTOTYPES
@@ -294,6 +294,138 @@ void spawnObject(float x, float y)
 }
 
 // =====================================================
+// RESET GAME
+// =====================================================
+
+void resetGame()
+{
+    score = 0;
+    remainingTime = 120;
+
+    basketWidth = 120;
+
+    objects.clear();
+    chickens.clear();
+
+    Chicken c1;
+
+    c1.x = 150;
+    c1.y = 620;
+    c1.speed = 3;
+    c1.dir = 1;
+
+    Chicken c2;
+
+    c2.x = 700;
+    c2.y = 500;
+    c2.speed = 2;
+    c2.dir = -1;
+
+    chickens.push_back(c1);
+    chickens.push_back(c2);
+
+    gameOver = false;
+}
+
+// =====================================================
+// DISPLAY
+// =====================================================
+
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // background
+    glColor3f(0.6f, 0.9f, 1.0f);
+
+    glBegin(GL_QUADS);
+
+    glVertex2f(0, 0);
+    glVertex2f(WIDTH, 0);
+    glVertex2f(WIDTH, HEIGHT);
+    glVertex2f(0, HEIGHT);
+
+    glEnd();
+
+    // menu
+    if (!gameStarted)
+    {
+        glColor3f(0, 0, 0);
+
+        drawText(400, 500, "CATCH THE EGGS");
+        drawText(360, 420, "Press ENTER to Start");
+        drawText(360, 380, "Press ESC to Exit");
+
+        glutSwapBuffers();
+        return;
+    }
+
+    // paused
+    if (gamePaused)
+    {
+        glColor3f(0, 0, 0);
+
+        drawText(430, 350, "GAME PAUSED");
+        drawText(350, 300, "Press P to Resume");
+
+        glutSwapBuffers();
+        return;
+    }
+
+    // game over
+    if (gameOver)
+    {
+        glColor3f(1, 0, 0);
+
+        drawText(430, 400, "GAME OVER");
+
+        stringstream ss;
+        ss << "Final Score: " << score;
+
+        drawText(420, 350, ss.str());
+        drawText(320, 280, "Press R to Restart");
+
+        glutSwapBuffers();
+        return;
+    }
+
+    // chickens
+    for (auto& c : chickens)
+    {
+        drawChicken(c.x, c.y);
+    }
+
+    // falling objects
+    for (auto& obj : objects)
+    {
+        drawObject(obj);
+    }
+
+    // basket
+    drawBasket();
+
+    // score
+    glColor3f(0, 0, 0);
+
+    stringstream scoreText;
+    scoreText << "Score: " << score;
+
+    drawText(20, 650, scoreText.str());
+
+    // time
+    stringstream timeText;
+    timeText << "Time: " << (int)remainingTime;
+
+    drawText(20, 620, timeText.str());
+
+    // controls
+    drawText(20, 590, "A/D or Mouse = Move Basket");
+    drawText(20, 560, "P = Pause");
+
+    glutSwapBuffers();
+}
+
+// =====================================================
 // UPDATE
 // =====================================================
 
@@ -404,138 +536,6 @@ void update(int value)
 }
 
 // =====================================================
-// DISPLAY
-// =====================================================
-
-void display()
-{
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    // background
-    glColor3f(0.6f, 0.9f, 1.0f);
-
-    glBegin(GL_QUADS);
-
-    glVertex2f(0, 0);
-    glVertex2f(WIDTH, 0);
-    glVertex2f(WIDTH, HEIGHT);
-    glVertex2f(0, HEIGHT);
-
-    glEnd();
-
-    // menu
-    if (!gameStarted)
-    {
-        glColor3f(0, 0, 0);
-
-        drawText(400, 500, "CATCH THE EGGS");
-        drawText(360, 420, "Press ENTER to Start");
-        drawText(360, 380, "Press ESC to Exit");
-
-        glutSwapBuffers();
-        return;
-    }
-
-    // paused
-    if (gamePaused)
-    {
-        glColor3f(0, 0, 0);
-
-        drawText(430, 350, "GAME PAUSED");
-        drawText(350, 300, "Press P to Resume");
-
-        glutSwapBuffers();
-        return;
-    }
-
-    // game over
-    if (gameOver)
-    {
-        glColor3f(1, 0, 0);
-
-        drawText(430, 400, "GAME OVER");
-
-        stringstream ss;
-        ss << "Final Score: " << score;
-
-        drawText(420, 350, ss.str());
-        drawText(320, 280, "Press R to Restart");
-
-        glutSwapBuffers();
-        return;
-    }
-
-    // chickens
-    for (auto& c : chickens)
-    {
-        drawChicken(c.x, c.y);
-    }
-
-    // falling objects
-    for (auto& obj : objects)
-    {
-        drawObject(obj);
-    }
-
-    // basket
-    drawBasket();
-
-    // score
-    glColor3f(0, 0, 0);
-
-    stringstream scoreText;
-    scoreText << "Score: " << score;
-
-    drawText(20, 650, scoreText.str());
-
-    // time
-    stringstream timeText;
-    timeText << "Time: " << (int)remainingTime;
-
-    drawText(20, 620, timeText.str());
-
-    // controls
-    drawText(20, 590, "A/D or Mouse = Move Basket");
-    drawText(20, 560, "P = Pause");
-
-    glutSwapBuffers();
-}
-
-
-// =====================================================
-// RESET GAME
-// =====================================================
-
-void resetGame()
-{
-    score = 0;
-    remainingTime = 120;
-
-    basketWidth = 120;
-
-    objects.clear();
-    chickens.clear();
-
-    Chicken c1;
-
-    c1.x = 150;
-    c1.y = 620;
-    c1.speed = 3;
-    c1.dir = 1;
-
-    Chicken c2;
-
-    c2.x = 700;
-    c2.y = 500;
-    c2.speed = 2;
-    c2.dir = -1;
-
-    chickens.push_back(c1);
-    chickens.push_back(c2);
-
-    gameOver = false;
-}
-// =====================================================
 // KEYBOARD
 // =====================================================
 
@@ -583,7 +583,6 @@ void keyboard(unsigned char key, int x, int y)
         basketX = WIDTH - basketWidth;
 }
 
-
 // =====================================================
 // MOUSE
 // =====================================================
@@ -612,7 +611,6 @@ void init()
 
     gluOrtho2D(0, WIDTH, 0, HEIGHT);
 }
-
 
 // =====================================================
 // MAIN
