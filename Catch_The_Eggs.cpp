@@ -95,3 +95,13 @@ void resetGame();
 // =====================================================
 // TEXT DRAWING
 // =====================================================
+
+void drawText(float x, float y, string text)
+{
+    glRasterPos2f(x, y);
+
+    for (char c : text)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+    }
+}
