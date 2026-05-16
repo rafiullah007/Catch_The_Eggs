@@ -144,3 +144,44 @@ void drawBasket()
 
     glEnd();
 }
+
+// =====================================================
+// DRAW CHICKEN
+// =====================================================
+
+void drawChicken(float x, float y)
+{
+    // body
+    glColor3f(1, 1, 1);
+    drawCircle(x, y, 25);
+
+    // head
+    drawCircle(x + 20, y + 20, 15);
+
+    // beak
+    glColor3f(1, 0.5f, 0);
+
+    glBegin(GL_TRIANGLES);
+
+    glVertex2f(x + 35, y + 20);
+    glVertex2f(x + 50, y + 25);
+    glVertex2f(x + 35, y + 30);
+
+    glEnd();
+
+    // eye
+    glColor3f(0, 0, 0);
+    drawCircle(x + 25, y + 25, 2);
+
+    // bamboo stick
+    glColor3f(0.3f, 0.8f, 0.3f);
+
+    glBegin(GL_QUADS);
+
+    glVertex2f(0, y - 40);
+    glVertex2f(WIDTH, y - 40);
+    glVertex2f(WIDTH, y - 30);
+    glVertex2f(0, y - 30);
+
+    glEnd();
+}
