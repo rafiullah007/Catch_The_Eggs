@@ -105,3 +105,24 @@ void drawText(float x, float y, string text)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
     }
 }
+
+// =====================================================
+// DRAW CIRCLE
+// =====================================================
+
+void drawCircle(float cx, float cy, float r)
+{
+    glBegin(GL_POLYGON);
+
+    for (int i = 0; i < 360; i++)
+    {
+        float theta = i * 3.1416f / 180.0f;
+
+        float x = r * cos(theta);
+        float y = r * sin(theta);
+
+        glVertex2f(cx + x, cy + y);
+    }
+
+    glEnd();
+}
